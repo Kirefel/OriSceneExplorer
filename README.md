@@ -22,3 +22,4 @@
 * Right click GameObject/Scene to expand and reveal children
 * Left click GameObject to view components and values
 * Left click GameObject/Component values of component properties to view that component
+* Shift click GameObject to toggle active
