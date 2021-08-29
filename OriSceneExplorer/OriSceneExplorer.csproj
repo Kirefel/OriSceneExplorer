@@ -7,8 +7,8 @@
     <ProjectGuid>{D55825EC-AA42-42CD-B6AF-2DEFE28B9E1C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OriDeModLoader</RootNamespace>
-    <AssemblyName>OriDeModLoader</AssemblyName>
+    <RootNamespace>OriSceneExplorer</RootNamespace>
+    <AssemblyName>OriSceneExplorer</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

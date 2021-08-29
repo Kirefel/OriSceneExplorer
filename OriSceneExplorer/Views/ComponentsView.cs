@@ -42,7 +42,9 @@ namespace OriSceneExplorer
                                 break;
                         }
                         else
+                        {
                             GUILayout.Label(kvp.Value.RawValue);
+                        }
 
                         GUILayout.EndHorizontal();
                     }
