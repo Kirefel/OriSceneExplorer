@@ -14,7 +14,7 @@ namespace OriSceneExplorer
         Vector2 componentsScroll = Vector2.zero;
         List<ComponentView> componentViews = new List<ComponentView>();
 
-        public ComponentsView(Rect windowRect) : base(windowRect, "GameObject")
+        public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
         }
 

@@ -12,7 +12,7 @@ namespace OriSceneExplorer
 
         public event Action<ViewerGORef> OnTargetGameObject;
 
-        public HierarchyView(Rect windowRect) : base(windowRect, "Hierarchy")
+        public HierarchyView(int col, int row, int width, int height) : base(col, row, width, height, "Hierarchy")
         {
         }
 

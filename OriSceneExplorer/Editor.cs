@@ -8,9 +8,9 @@ namespace OriSceneExplorer
         bool pause = false;
         bool visible = true;
 
-        HierarchyView hierarchyView = new HierarchyView(new Rect(10, 10, Screen.width / 3, Screen.height - 20));
-        ComponentsView componentsView = new ComponentsView(new Rect(Screen.width / 3 + 20, 10, Screen.width / 3, Screen.height - 20));
-        LogView logsView = new LogView(new Rect(2 * Screen.width / 3 + 30, Screen.height / 2 + 20, Screen.width / 3 - 40, Screen.height / 2 - 40));
+        HierarchyView hierarchyView = new HierarchyView(0, 0, 4, 12);
+        ComponentsView componentsView = new ComponentsView(4, 0, 4, 12);
+        LogView logsView = new LogView(8, 6, 4, 6);
 
         public void Start()
         {

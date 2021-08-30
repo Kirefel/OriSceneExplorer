@@ -9,7 +9,7 @@ namespace OriSceneExplorer
         Vector2 scrollPosition = Vector2.zero;
         private bool reverse = true;
 
-        public LogView(Rect windowRect) : base(windowRect, "Unity Logs")
+        public LogView(int col, int row, int width, int height) : base(col, row, width, height, "Unity Logs")
         {
             Application.logMessageReceived += Application_logMessageReceived;
         }
