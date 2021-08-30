@@ -7,7 +7,6 @@ namespace OriSceneExplorer
     {
         List<string> logs = new List<string>();
         Vector2 scrollPosition = Vector2.zero;
-        private bool reverse = true;
 
         public LogView(int col, int row, int width, int height) : base(col, row, width, height, "Unity Logs")
         {
@@ -23,17 +22,12 @@ namespace OriSceneExplorer
 
         protected override void Draw(int windowID)
         {
+            if (GUILayout.Button("Clear", GUILayout.Width(150)))
+                ClearLogs();
+
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-            if (!reverse)
-            {
-                for (int i = 0; i < logs.Count; i++)
-                    GUILayout.Label(logs[i]);
-            }
-            else
-            {
-                for (int i = logs.Count - 1; i >= 0; i--)
-                    GUILayout.Label(logs[i]);
-            }
+            for (int i = 0; i < logs.Count; i++)
+                GUILayout.Label(logs[i]);
             GUILayout.EndScrollView();
         }
 

@@ -11,10 +11,13 @@ namespace OriSceneExplorer
         private readonly HierarchyView hierarchyView = new HierarchyView(0, 0, 4, 12);
         private readonly ComponentsView componentsView = new ComponentsView(4, 0, 4, 12);
         private readonly LogView logsView = new LogView(8, 6, 4, 6);
+        private readonly HistoryView historyView = new HistoryView(8, 0, 4, 6);
 
         public void Start()
         {
             hierarchyView.OnTargetGameObject += componentsView.Load;
+            hierarchyView.OnTargetGameObject += historyView.Push;
+            historyView.OnSelectionChange += componentsView.Load;
         }
 
         public void Update()
@@ -32,7 +35,10 @@ namespace OriSceneExplorer
             }
 
             if (Input.GetKeyDown(KeyCode.F5))
+            {
                 hierarchyView.Refresh();
+                historyView.Reset();
+            }
 
             if (Input.GetKeyDown(KeyCode.F4))
                 logsView.ClearLogs();
@@ -46,6 +52,7 @@ namespace OriSceneExplorer
             hierarchyView.OnGUI();
             componentsView.OnGUI();
             logsView.OnGUI();
+            historyView.OnGUI();
 
             Dispatch.Execute();
         }
