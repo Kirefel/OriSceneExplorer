@@ -11,11 +11,10 @@
 
 ## Keys
 
-* \`: Toggle display
-* `Backspace`: Pause/Resume
-* `\`: Populate with current hierarchy
-* `Delete`: Clear logs
-* `[` and `]` to go through selection history (in progress)
+* `F1`: Toggle display
+* `F2`: Pause/Resume
+* `F4`: Clear logs
+* `F5`: Populate with current hierarchy
 
 ## Control
 

@@ -5,12 +5,12 @@ namespace OriSceneExplorer
     public class Editor : MonoBehaviour
     {
         public static bool ready = false;
-        bool pause = false;
-        bool visible = true;
+        private bool pause = false;
+        private bool visible = true;
 
-        HierarchyView hierarchyView = new HierarchyView(0, 0, 4, 12);
-        ComponentsView componentsView = new ComponentsView(4, 0, 4, 12);
-        LogView logsView = new LogView(8, 6, 4, 6);
+        private readonly HierarchyView hierarchyView = new HierarchyView(0, 0, 4, 12);
+        private readonly ComponentsView componentsView = new ComponentsView(4, 0, 4, 12);
+        private readonly LogView logsView = new LogView(8, 6, 4, 6);
 
         public void Start()
         {
@@ -19,10 +19,10 @@ namespace OriSceneExplorer
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.BackQuote))
+            if (Input.GetKeyDown(KeyCode.F1))
                 visible = !visible;
 
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (Input.GetKeyDown(KeyCode.F2))
             {
                 pause = !pause;
                 if (pause)
@@ -31,10 +31,10 @@ namespace OriSceneExplorer
                     SuspensionManager.ResumeAll();
             }
 
-            if (Input.GetKeyDown(KeyCode.Backslash))
+            if (Input.GetKeyDown(KeyCode.F5))
                 hierarchyView.Refresh();
 
-            if (Input.GetKeyDown(KeyCode.Delete))
+            if (Input.GetKeyDown(KeyCode.F4))
                 logsView.ClearLogs();
         }
 
@@ -46,6 +46,8 @@ namespace OriSceneExplorer
             hierarchyView.OnGUI();
             componentsView.OnGUI();
             logsView.OnGUI();
+
+            Dispatch.Execute();
         }
     }
 }

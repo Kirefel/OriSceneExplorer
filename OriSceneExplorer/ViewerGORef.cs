@@ -11,6 +11,7 @@ namespace OriSceneExplorer
         public List<ViewerGORef> Children { get; set; }
         public bool Expanded { get; set; }
         public int Depth { get; set; }
+        public bool MatchesFilter { get; set; }
 
         private WeakReference reference;
         public GameObject Reference

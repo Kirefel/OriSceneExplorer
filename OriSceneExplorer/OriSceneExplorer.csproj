@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dispatch.cs" />
     <Compile Include="Views\ComponentsView.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Views\EditorView.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="SceneGraphReader.cs" />
     <Compile Include="ViewerGORef.cs" />
     <Compile Include="Views\LogView.cs" />
+    <Compile Include="SearchBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
