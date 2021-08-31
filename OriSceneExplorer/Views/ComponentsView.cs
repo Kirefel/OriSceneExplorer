@@ -10,9 +10,10 @@ namespace OriSceneExplorer
 {
     public class ComponentsView : EditorView
     {
-        string referenceGameObjectName = null;
+        ViewerGORef referenceGameObject = null;
         Vector2 componentsScroll = Vector2.zero;
         List<ComponentView> componentViews = new List<ComponentView>();
+        string fullPath = null;
 
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
@@ -20,8 +21,10 @@ namespace OriSceneExplorer
 
         protected override void Draw(int windowID)
         {
-            if (referenceGameObjectName != null)
+            if (referenceGameObject != null)
             {
+                GUILayout.TextField(fullPath);
+
                 componentsScroll = GUILayout.BeginScrollView(componentsScroll);
 
                 for (int i = 0; i < componentViews.Count; i++)
@@ -76,8 +79,9 @@ namespace OriSceneExplorer
 
             if (go)
             {
-                referenceGameObjectName = goref.Name;
-                this.Title = referenceGameObjectName;
+                referenceGameObject = goref;
+                this.Title = goref.Name;
+                this.fullPath = goref.GetFullPath();
 
                 componentViews.Clear();
                 var components = go.GetComponents<Component>();

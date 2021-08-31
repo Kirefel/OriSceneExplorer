@@ -62,5 +62,23 @@ namespace OriSceneExplorer
                 return Color.white;
             }
         }
+
+        public string GetFullPath()
+        {
+            if (Reference == null)
+                return null;
+
+            List<string> names = new List<string>();
+            names.Add(this.Name);
+            var parent = Reference.transform.parent;
+            while (parent != null)
+            {
+                names.Add(parent.name);
+                parent = parent.parent;
+            }
+
+            names.Reverse();
+            return string.Join("/", names.ToArray());
+        }
     }
 }
