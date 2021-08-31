@@ -16,6 +16,8 @@ namespace OriSceneExplorer
         List<ComponentView> componentViews = new List<ComponentView>();
         string fullPath = null;
 
+        public event Action<ViewerGORef> OnFocusProperty;
+
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
         }
@@ -110,6 +112,7 @@ namespace OriSceneExplorer
                     Reference = value.Reference
                 };
                 Load(goref);
+                OnFocusProperty?.Invoke(goref);
                 return true;
             }
             return false;

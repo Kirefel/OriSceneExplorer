@@ -17,6 +17,7 @@ namespace OriSceneExplorer
         {
             hierarchyView.OnTargetGameObject += componentsView.Load;
             hierarchyView.OnTargetGameObject += historyView.Push;
+            componentsView.OnFocusProperty += historyView.Push;
             historyView.OnSelectionChange += componentsView.Load;
         }
 

@@ -45,7 +45,7 @@ namespace OriSceneExplorer
 
         public void Push(ViewerGORef goref)
         {
-            int index = history.FindIndex(x => x == goref);
+            int index = history.FindIndex(x => x.Reference != null && x.Reference == goref.Reference);
             if (index >= 0)
             {
                 current = index;
