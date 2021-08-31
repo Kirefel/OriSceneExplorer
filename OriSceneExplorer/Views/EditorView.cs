@@ -25,9 +25,19 @@ namespace OriSceneExplorer
 
         protected abstract void Draw(int windowID);
 
+        private void WindowFunc(int windowID)
+        {
+            var c = GUI.backgroundColor;
+            GUI.backgroundColor = new Color(0, 0, 0, 1f);
+            GUI.Box(new Rect(0, 16, windowRect.width, windowRect.height - 16), "");
+            GUI.backgroundColor = c;
+
+            Draw(windowID);
+        }
+
         public void OnGUI()
         {
-            windowRect = GUI.Window(index, windowRect, Draw, Title);
+            windowRect = GUI.Window(index, windowRect, WindowFunc, Title);
         }
     }
 }
