@@ -99,12 +99,13 @@ namespace OriSceneExplorer
             foreach (PropertyInfo propertyInfo in component.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 ReflectionInfoWrapper wrapper = new ReflectionInfoWrapper(propertyInfo);
-                if (wrapper.CanRead)
+                if (wrapper.CanRead && !exclusions.Contains(propertyInfo.Name))
                     view.Values[propertyInfo.Name] = LoadMember(wrapper, component);
             }
             foreach (FieldInfo fieldInfo in component.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                view.Values[fieldInfo.Name] = LoadMember(new ReflectionInfoWrapper(fieldInfo), component);
+                if (!exclusions.Contains(fieldInfo.Name))
+                    view.Values[fieldInfo.Name] = LoadMember(new ReflectionInfoWrapper(fieldInfo), component);
             }
 
             return view;
@@ -115,10 +116,12 @@ namespace OriSceneExplorer
             var view = new ComponentView { ComponentName = "Transform" };
             view.Values["Position"] = new PropertyValue(transform.position.ToString(), typeof(Vector3));
             view.Values["Rotation"] = new PropertyValue(transform.eulerAngles.ToString(), typeof(Vector3));
+            view.Values["Tag"] = new PropertyValue(transform.tag, typeof(string));
 
             return view;
         }
 
+        private static string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled" };
         private PropertyValue LoadMember(ReflectionInfoWrapper field, Component instance)
         {
             // Null -> null
