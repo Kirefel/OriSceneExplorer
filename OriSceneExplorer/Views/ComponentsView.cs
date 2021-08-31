@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -24,6 +25,8 @@ namespace OriSceneExplorer
             if (referenceGameObject != null)
             {
                 GUILayout.TextField(fullPath);
+                if (GUILayout.Button("Dump to file"))
+                    DumpToFile();
 
                 componentsScroll = GUILayout.BeginScrollView(componentsScroll);
 
@@ -55,6 +58,45 @@ namespace OriSceneExplorer
                 }
 
                 GUILayout.EndScrollView();
+            }
+        }
+
+        private void DumpToFile()
+        {
+            using (var writer = new StreamWriter("scene.txt", append: true))
+            {
+                writer.WriteLine("==============================");
+                writer.WriteLine(referenceGameObject.Name);
+                writer.WriteLine(fullPath);
+                foreach (var cv in this.componentViews)
+                {
+                    writer.WriteLine(cv.ComponentName);
+                    int longestName = 0, longestType = 0;
+                    foreach (var propView in cv.Values)
+                    {
+                        if (propView.Key.Length > longestName)
+                            longestName = propView.Key.Length;
+                        if (propView.Value.TypeName.Length > longestType)
+                            longestType = propView.Value.TypeName.Length;
+                    }
+
+                    foreach (var propView in cv.Values)
+                    {
+                        writer.Write(propView.Key);
+                        writer.Write(new string(' ', longestName - propView.Key.Length)); 
+                        writer.Write("  ");
+
+                        writer.Write(propView.Value.TypeName);
+                        writer.Write(new string(' ', longestType - propView.Value.TypeName.Length));
+                        writer.Write("  ");
+
+                        int inset = longestName + longestType + 4;
+                        writer.WriteLine(propView.Value.RawValue.Replace("\n", "\n" + new string(' ', inset)));
+                    }
+
+                    writer.WriteLine();
+                }
+                writer.WriteLine();
             }
         }
 
