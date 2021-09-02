@@ -27,6 +27,17 @@ namespace OriSceneExplorer
         protected override void Draw(int windowID)
         {
             filterBox.Draw();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Refresh", GUILayout.Width(250)))
+            {
+                Refresh();
+            }
+            if (GUILayout.Button("Collapse All", GUILayout.Width(250)))
+            {
+                foreach (var goref in allRefs)
+                    Collapse(goref);
+            }
+            GUILayout.EndHorizontal();
 
             hierarchyscroll = GUILayout.BeginScrollView(hierarchyscroll);
             foreach (var goref in allRefs)
@@ -189,6 +200,13 @@ namespace OriSceneExplorer
 
             if (expand)
                 ExpandPathToGameObject(newSelection);
+        }
+
+        private void Collapse(ViewerGORef goref)
+        {
+            goref.Expanded = false;
+            foreach (var child in goref.Children)
+                Collapse(child);
         }
     }
 }
