@@ -22,3 +22,4 @@
 * Left click GameObject to view components and values
 * Left click GameObject/Component values of component properties to view that component
 * Shift click GameObject to toggle active
+* Middle mouse click in game world to select the object under the cursor (note: picks the closest renderer. The object you want is likely its parent.)

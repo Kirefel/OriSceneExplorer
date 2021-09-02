@@ -85,7 +85,7 @@ namespace OriSceneExplorer
                     foreach (var propView in cv.Values)
                     {
                         writer.Write(propView.Key);
-                        writer.Write(new string(' ', longestName - propView.Key.Length)); 
+                        writer.Write(new string(' ', longestName - propView.Key.Length));
                         writer.Write("  ");
 
                         writer.Write(propView.Value.TypeName);
@@ -173,10 +173,19 @@ namespace OriSceneExplorer
         private static string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled" };
         private PropertyValue LoadMember(ReflectionInfoWrapper field, Component instance)
         {
-            // Null -> null
-            var objValue = field.GetValue(instance);
+            object objValue;
+            try
+            {
+                objValue = field.GetValue(instance);
+            }
+            catch
+            {
+                return new PropertyValue("(Unable to load value)", field.MemberType);
+            }
+
+            // Null -> (null)
             if (objValue == null)
-                return new PropertyValue("null", field.MemberType);
+                return new PropertyValue("(null)", field.MemberType);
 
             // Component -> GameObjectName (ComponentType)
             if (typeof(Component).IsAssignableFrom(field.MemberType))

@@ -13,8 +13,11 @@ namespace OriSceneExplorer
         private bool filtered = false;
 
         public event Action<ViewerGORef> OnTargetGameObject;
+        private ViewerGORef selection;
 
         private readonly SearchBox filterBox = new SearchBox();
+
+        private List<ViewerGORef> activeRendererComponents = new List<ViewerGORef>();
 
         public HierarchyView(int col, int row, int width, int height) : base(col, row, width, height, "Hierarchy")
         {
@@ -42,10 +45,13 @@ namespace OriSceneExplorer
             GUILayout.Space(goref.Depth * indentSize);
 
             GUI.color = goref.Colour;
+            if (selection != null && (selection == goref || (selection.Reference != null && selection.Reference == goref.Reference)))
+                GUI.color = selection.Reference?.activeInHierarchy ?? true ? Color.green : new Color(0, 0.5f, 0);
+
             if (GUILayout.Button(goref.Label, "Label"))
             {
                 if (Event.current.button == 1)
-                {
+                { 
                     goref.Expanded = !goref.Expanded;
                 }
                 else
@@ -55,12 +61,10 @@ namespace OriSceneExplorer
                     {
                         goref.Reference.SetActive(!goref.Reference.activeInHierarchy);
                     }
-                    else
+                    else if (Event.current.button == 0)
                     {
                         // Open all parents leading to selection so filter can be cleared while preserving hierarchy
-                        if (filtered)
-                            ExpandPathToGameObject(goref);
-
+                        SetSelection(goref, expand: filtered);
                         OnTargetGameObject?.Invoke(goref);
                     }
                 }
@@ -74,6 +78,40 @@ namespace OriSceneExplorer
             {
                 foreach (var c in goref.Children)
                     DrawRef(c);
+            }
+        }
+
+        public void SelectObjectUnderCursor()
+        {
+            // TODO does not work for UI yet
+            if (activeRendererComponents?.Count > 0)
+            {
+                Vector3 mousePos = Input.mousePosition;
+
+                ViewerGORef closestObject = null;
+                float closestDistance = float.PositiveInfinity;
+
+                foreach (var obj in activeRendererComponents)
+                {
+                    if (obj.Reference == null)
+                        continue;
+
+                    Vector3 delta = mousePos - Camera.current.WorldToScreenPoint(obj.Reference.transform.position);
+                    delta.z = 0;
+
+                    float distance = delta.sqrMagnitude;
+                    if (closestObject == null || distance < closestDistance)
+                    {
+                        closestObject = obj;
+                        closestDistance = distance;
+                    }
+                }
+
+                if (closestObject != null)
+                {
+                    OnTargetGameObject?.Invoke(closestObject);
+                    SetSelection(closestObject, true);
+                }
             }
         }
 
@@ -122,7 +160,7 @@ namespace OriSceneExplorer
 
         private bool ExpandPathToGameObject(ViewerGORef current, ViewerGORef target)
         {
-            if (current == target)
+            if (current == target || current.Reference != null && current.Reference == target.Reference)
                 return true;
 
             foreach (var child in current.Children)
@@ -139,7 +177,18 @@ namespace OriSceneExplorer
 
         public void Refresh()
         {
-            allRefs = new SceneGraphReader().GetAllGameObjectReferences();
+            var sceneGraphReader = new SceneGraphReader();
+            allRefs = sceneGraphReader.GetAllGameObjectReferences();
+            activeRendererComponents = sceneGraphReader.GetAllActiveRendererComponents();
+            SetSelection(null, false);
+        }
+
+        public void SetSelection(ViewerGORef newSelection, bool expand)
+        {
+            selection = newSelection;
+
+            if (expand)
+                ExpandPathToGameObject(newSelection);
         }
     }
 }

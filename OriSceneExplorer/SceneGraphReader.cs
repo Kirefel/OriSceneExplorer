@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,6 +29,18 @@ namespace OriSceneExplorer
             }
 
             return allRefs;
+        }
+
+        public List<ViewerGORef> GetAllActiveRendererComponents()
+        {
+            return GameObject.FindObjectsOfType<Renderer>()
+                .Where(r => r.gameObject.activeInHierarchy)
+                .Select(r => new ViewerGORef()
+                {
+                    Reference = r.gameObject,
+                    Name = r.name
+                })
+                .ToList();
         }
 
         private ViewerGORef BuildGORef(GameObject go, int depth)

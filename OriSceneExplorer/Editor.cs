@@ -18,7 +18,9 @@ namespace OriSceneExplorer
             hierarchyView.OnTargetGameObject += componentsView.Load;
             hierarchyView.OnTargetGameObject += historyView.Push;
             componentsView.OnFocusProperty += historyView.Push;
+            componentsView.OnFocusProperty += obj => hierarchyView.SetSelection(obj, true);
             historyView.OnSelectionChange += componentsView.Load;
+            historyView.OnSelectionChange += obj => hierarchyView.SetSelection(obj, true);
         }
 
         public void Update()
@@ -43,6 +45,9 @@ namespace OriSceneExplorer
 
             if (Input.GetKeyDown(KeyCode.F4))
                 logsView.ClearLogs();
+
+            if (Input.GetKeyDown(KeyCode.Mouse2))
+                hierarchyView.SelectObjectUnderCursor();
         }
 
         public void OnGUI()
