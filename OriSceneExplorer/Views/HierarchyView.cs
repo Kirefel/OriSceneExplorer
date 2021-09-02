@@ -92,6 +92,8 @@ namespace OriSceneExplorer
             }
         }
 
+        public bool IsEmpty() => !allRefs.Any();
+
         public void SelectObjectUnderCursor()
         {
             // TODO does not work for UI yet
