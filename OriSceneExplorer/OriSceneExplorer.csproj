@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dispatch.cs" />
+    <Compile Include="PropertyEditor.cs" />
     <Compile Include="Views\ComponentsView.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Views\EditorView.cs" />

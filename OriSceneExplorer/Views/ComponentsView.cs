@@ -16,11 +16,14 @@ namespace OriSceneExplorer
         List<ComponentView> componentViews = new List<ComponentView>();
         string fullPath = null;
 
+        private PropertyEditorFactory PropertyEditorFactory { get; }
+
         public event Action<ViewerGORef> OnFocusProperty;
         public event Action<GameObject> OnClone;
 
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
+            PropertyEditorFactory = new PropertyEditorFactory();
         }
 
         protected override void Draw(int windowID)
@@ -42,25 +45,30 @@ namespace OriSceneExplorer
                     var view = componentViews[i];
 
                     DrawComponentHeader(view);
-                    foreach (var kvp in view.Values)
+                    if (view.Expanded)
                     {
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Label(kvp.Key, GUILayout.Width(240));
-                        GUILayout.Label(kvp.Value.TypeName, GUILayout.Width(160));
-
-                        if (kvp.Value.Reference != null)
+                        foreach (var kvp in view.Values)
                         {
-                            // Modifies collection so cancel now and get rebuilt next call
-                            if (DrawButton(kvp.Value))
-                                break;
-                        }
-                        else
-                        {
-                            GUILayout.Label(kvp.Value.RawValue);
-                        }
+                            GUILayout.BeginHorizontal();
+                            GUILayout.Label(kvp.Key, GUILayout.Width(240));
+                            GUILayout.Label(kvp.Value.TypeName, GUILayout.Width(160));
 
-                        GUILayout.EndHorizontal();
+                            if (kvp.Value.Reference != null)
+                            {
+                                // Modifies collection so cancel now and get rebuilt next call
+                                if (DrawButton(kvp.Value))
+                                    break;
+                            }
+                            else
+                            {
+                                kvp.Value.Editor.Draw();
+                                //GUILayout.Label(kvp.Value.StringValue);
+                            }
+
+                            GUILayout.EndHorizontal();
+                        }
                     }
+
                     GUILayout.Space(30);
                 }
 
@@ -79,7 +87,8 @@ namespace OriSceneExplorer
             }
 
             // Name
-            GUILayout.Label(view.ComponentName);
+            if (GUILayout.Button(view.ComponentName, "Label"))
+                view.Expanded = !view.Expanded;
 
             // Delete button
             if (view.Component.GetType() != typeof(Transform))
@@ -136,7 +145,7 @@ namespace OriSceneExplorer
                         writer.Write("  ");
 
                         int inset = longestName + longestType + 4;
-                        writer.WriteLine(propView.Value.RawValue.Replace("\n", "\n" + new string(' ', inset)));
+                        writer.WriteLine(propView.Value.Editor.StringValue().Replace("\n", "\n" + new string(' ', inset)));
                     }
 
                     writer.WriteLine();
@@ -149,7 +158,7 @@ namespace OriSceneExplorer
 
         private bool DrawButton(PropertyValue value)
         {
-            if (GUILayout.Button(value.RawValue, "Label"))
+            if (GUILayout.Button(value.Editor.StringValue(), "Label"))
             {
                 var goref = new ViewerGORef()
                 {
@@ -194,12 +203,12 @@ namespace OriSceneExplorer
             {
                 ReflectionInfoWrapper wrapper = new ReflectionInfoWrapper(propertyInfo);
                 if (wrapper.CanRead && !exclusions.Contains(propertyInfo.Name))
-                    view.Values[propertyInfo.Name] = LoadMember(wrapper, component);
+                    view.Values[propertyInfo.Name] = LoadEditor(wrapper, component);
             }
             foreach (FieldInfo fieldInfo in component.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (!exclusions.Contains(fieldInfo.Name))
-                    view.Values[fieldInfo.Name] = LoadMember(new ReflectionInfoWrapper(fieldInfo), component);
+                    view.Values[fieldInfo.Name] = LoadEditor(new ReflectionInfoWrapper(fieldInfo), component);
             }
 
             return view;
@@ -208,15 +217,16 @@ namespace OriSceneExplorer
         private ComponentView LoadTransform(Transform transform)
         {
             var view = new ComponentView { Component = transform, ComponentName = "Transform" };
-            view.Values["Position"] = new PropertyValue(transform.position.ToString(), typeof(Vector3));
-            view.Values["Rotation"] = new PropertyValue(transform.eulerAngles.ToString(), typeof(Vector3));
+            view.Values["Position"] = new PropertyValue(new Vector3Editor(new ReflectionInfoWrapper(typeof(Transform).GetProperty("position", BindingFlags.Public | BindingFlags.Instance)), transform), typeof(Vector3));
+            view.Values["Local Position"] = new PropertyValue(new Vector3Editor(new ReflectionInfoWrapper(typeof(Transform).GetProperty("localPosition", BindingFlags.Public | BindingFlags.Instance)), transform), typeof(Vector3));
+            view.Values["Rotation"] = new PropertyValue(new Vector3Editor(new ReflectionInfoWrapper(typeof(Transform).GetProperty("eulerAngles", BindingFlags.Public | BindingFlags.Instance)), transform), typeof(Vector3));
             view.Values["Tag"] = new PropertyValue(transform.tag, typeof(string));
 
             return view;
         }
 
         private static string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled", "enabled" };
-        private PropertyValue LoadMember(ReflectionInfoWrapper field, Component instance)
+        private PropertyValue LoadEditor(ReflectionInfoWrapper field, Component instance)
         {
             object objValue;
             try
@@ -225,7 +235,7 @@ namespace OriSceneExplorer
             }
             catch
             {
-                return new PropertyValue("(Unable to load value)", field.MemberType);
+                return new PropertyValue(new ConstantEditor("(Unable to load value)"), field.MemberType);
             }
 
             // Null -> (null)
@@ -254,8 +264,11 @@ namespace OriSceneExplorer
                 return new PropertyValue($"{enumerableValue.Cast<object>().Count()} items", field.MemberType);
             }
 
-            // Raw value (string, int, bool etc.) -> draw value
-            return new PropertyValue(objValue.ToString(), field.MemberType);
+            // string, int, bool etc. -> draw value
+            if (field.CanWrite)
+                return new PropertyValue(PropertyEditorFactory.CreateEditor(field, instance), field.MemberType);
+            else
+                return new PropertyValue(objValue.ToString(), field.MemberType);
         }
     }
 
@@ -271,7 +284,16 @@ namespace OriSceneExplorer
 
             public Type MemberType => _fieldInfo?.FieldType ?? _propertyInfo.PropertyType;
             public object GetValue(object instance) => _fieldInfo != null ? _fieldInfo.GetValue(instance) : _propertyInfo.GetValue(instance, null);
-            public bool CanRead => _fieldInfo != null ? true : _propertyInfo.CanRead;
+            public void SetValue(object instance, object value)
+            {
+                if (_fieldInfo != null)
+                    _fieldInfo.SetValue(instance, value);
+                else
+                    _propertyInfo.SetValue(instance, value, null);
+            }
+
+            public bool CanRead => _fieldInfo != null || _propertyInfo.CanRead;
+            public bool CanWrite => _fieldInfo != null || _propertyInfo.CanWrite;
         }
 
         public class ComponentView
@@ -279,11 +301,12 @@ namespace OriSceneExplorer
             public Component Component { get; set; }
             public string ComponentName { get; set; }
             public Dictionary<string, PropertyValue> Values { get; set; } = new Dictionary<string, PropertyValue>();
+            public bool Expanded { get; set; } = true;
         }
 
         public class PropertyValue
         {
-            public string RawValue { get; set; }
+            public IPropertyEditor Editor { get; }
             public string TypeName { get; set; }
 
             private WeakReference reference;
@@ -301,9 +324,15 @@ namespace OriSceneExplorer
                 }
             }
 
-            public PropertyValue(string rawValue, Type type)
+            public PropertyValue(string constantValue, Type type)
             {
-                RawValue = rawValue;
+                Editor = new ConstantEditor(constantValue);
+                TypeName = GetFormattedName(type);
+            }
+
+            public PropertyValue(IPropertyEditor editor, Type type)
+            {
+                Editor = editor;
                 TypeName = GetFormattedName(type);
             }
 
