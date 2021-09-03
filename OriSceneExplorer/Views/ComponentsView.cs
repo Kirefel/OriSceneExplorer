@@ -20,6 +20,8 @@ namespace OriSceneExplorer
 
         public event Action<ViewerGORef> OnFocusProperty;
         public event Action<GameObject> OnClone;
+        public event Action<ViewerGORef> OnStartMoving;
+        public event Action<ViewerGORef> OnStartRotating;
 
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
@@ -36,6 +38,10 @@ namespace OriSceneExplorer
                     DumpToFile();
                 if (GUILayout.Button("Clone"))
                     Clone();
+                if (GUILayout.Button("Move"))
+                    OnStartMoving?.Invoke(referenceGameObject);
+                if (GUILayout.Button("Rotate"))
+                    OnStartRotating?.Invoke(referenceGameObject);
                 GUILayout.EndHorizontal();
 
                 componentsScroll = GUILayout.BeginScrollView(componentsScroll);

@@ -32,6 +32,10 @@ namespace OriSceneExplorer
 
         EditorView[] allViews;
 
+        bool moving;
+        bool rotating;
+        Transform transformTarget;
+
         public void Start()
         {
             allViews = new EditorView[] { hierarchyView, componentsView, logsView, historyView };
@@ -41,8 +45,24 @@ namespace OriSceneExplorer
             componentsView.OnFocusProperty += historyView.Push;
             componentsView.OnFocusProperty += obj => hierarchyView.SetSelection(obj, true);
             componentsView.OnClone += obj => hierarchyView.Refresh(obj);
+            componentsView.OnStartMoving += ComponentsView_OnStartMoving;
+            componentsView.OnStartRotating += ComponentsView_OnStartRotating;
             historyView.OnSelectionChange += componentsView.Load;
             historyView.OnSelectionChange += obj => hierarchyView.SetSelection(obj, true);
+        }
+
+        private void ComponentsView_OnStartRotating(ViewerGORef obj)
+        {
+            moving = false;
+            rotating = true;
+            transformTarget = obj.Reference.transform;
+        }
+
+        private void ComponentsView_OnStartMoving(ViewerGORef obj)
+        {
+            moving = true;
+            rotating = false;
+            transformTarget = obj.Reference.transform;
         }
 
         public void Update()
@@ -72,11 +92,38 @@ namespace OriSceneExplorer
 
             if (Input.GetKeyDown(KeyCode.Mouse2))
                 hierarchyView.SelectObjectUnderCursor();
+
+            if (moving)
+            {
+                transformTarget.position = GetWorldPositionOnPlane(Input.mousePosition, transformTarget.position.z);
+            }
+            if (rotating)
+            {
+                var pos = GetWorldPositionOnPlane(Input.mousePosition, transformTarget.position.z);
+                var delta = pos - transformTarget.position;
+                float z = Mathf.Atan2(delta.y, delta.x);
+                transformTarget.eulerAngles = new Vector3(transformTarget.eulerAngles.x, transformTarget.eulerAngles.y, z * Mathf.Rad2Deg);
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                moving = false;
+                rotating = false;
+                transformTarget = null;
+            }
+        }
+
+        public Vector3 GetWorldPositionOnPlane(Vector3 screenPosition, float z)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+            Plane xy = new Plane(Vector3.forward, new Vector3(0, 0, z));
+            float distance;
+            xy.Raycast(ray, out distance);
+            return ray.GetPoint(distance);
         }
 
         public void OnGUI()
         {
-            if (!visible)
+            if (!visible || moving || rotating)
                 return;
 
             hierarchyView.OnGUI();
