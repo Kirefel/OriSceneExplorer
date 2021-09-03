@@ -41,7 +41,11 @@ namespace OriSceneExplorer
                 {
                     var view = componentViews[i];
 
+                    GUILayout.BeginHorizontal();
+                    if (view.Component is MonoBehaviour mb)
+                        mb.enabled = GUILayout.Toggle(mb.enabled, "", GUILayout.Width(16));
                     GUILayout.Label(view.ComponentName);
+                    GUILayout.EndHorizontal();
                     foreach (var kvp in view.Values)
                     {
                         GUILayout.BeginHorizontal();
@@ -161,7 +165,7 @@ namespace OriSceneExplorer
             if (typeof(Transform).IsAssignableFrom(component.GetType()))
                 return LoadTransform(component as Transform);
 
-            var view = new ComponentView { ComponentName = component.GetType().Name };
+            var view = new ComponentView { Component = component, ComponentName = component.GetType().Name };
 
             foreach (PropertyInfo propertyInfo in component.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
@@ -188,7 +192,7 @@ namespace OriSceneExplorer
             return view;
         }
 
-        private static string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled" };
+        private static string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled", "enabled" };
         private PropertyValue LoadMember(ReflectionInfoWrapper field, Component instance)
         {
             object objValue;
@@ -249,6 +253,7 @@ namespace OriSceneExplorer
 
         public class ComponentView
         {
+            public Component Component { get; set; }
             public string ComponentName { get; set; }
             public Dictionary<string, PropertyValue> Values { get; set; } = new Dictionary<string, PropertyValue>();
         }
