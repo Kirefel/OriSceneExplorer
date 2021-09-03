@@ -17,6 +17,7 @@ namespace OriSceneExplorer
         string fullPath = null;
 
         public event Action<ViewerGORef> OnFocusProperty;
+        public event Action<GameObject> OnClone;
 
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
@@ -27,8 +28,12 @@ namespace OriSceneExplorer
             if (referenceGameObject != null)
             {
                 GUILayout.TextField(fullPath);
+                GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Dump to file"))
                     DumpToFile();
+                if (GUILayout.Button("Clone"))
+                    Clone();
+                GUILayout.EndHorizontal();
 
                 componentsScroll = GUILayout.BeginScrollView(componentsScroll);
 
@@ -61,6 +66,17 @@ namespace OriSceneExplorer
 
                 GUILayout.EndScrollView();
             }
+        }
+
+        private void Clone()
+        {
+            if (referenceGameObject.Reference == null)
+                return;
+
+            var clone = GameObject.Instantiate(referenceGameObject.Reference);
+            clone.transform.SetParent(referenceGameObject.Reference.transform.parent, true);
+            clone.transform.position = referenceGameObject.Reference.transform.position;
+            OnClone?.Invoke(clone.gameObject);
         }
 
         private void DumpToFile()
@@ -100,6 +116,8 @@ namespace OriSceneExplorer
                 }
                 writer.WriteLine();
             }
+
+            Debug.Log("Written to scene.txt");
         }
 
         private bool DrawButton(PropertyValue value)

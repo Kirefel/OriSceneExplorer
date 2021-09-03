@@ -62,7 +62,7 @@ namespace OriSceneExplorer
             if (GUILayout.Button(goref.Label, "Label"))
             {
                 if (Event.current.button == 1)
-                { 
+                {
                     goref.Expanded = !goref.Expanded;
                 }
                 else
@@ -188,12 +188,16 @@ namespace OriSceneExplorer
             return false;
         }
 
-        public void Refresh()
+        /// <param name="target">Optional GameObject to select after refresh</param>
+        public void Refresh(GameObject target = null)
         {
-            var sceneGraphReader = new SceneGraphReader();
+            var sceneGraphReader = new SceneGraphReader(target);
             allRefs = sceneGraphReader.GetAllGameObjectReferences();
             activeRendererComponents = sceneGraphReader.GetAllActiveRendererComponents();
-            SetSelection(null, false);
+
+            SetSelection(sceneGraphReader.TargetGoRef, false);
+            if (sceneGraphReader.TargetGoRef != null)
+                OnTargetGameObject?.Invoke(sceneGraphReader.TargetGoRef);
         }
 
         public void SetSelection(ViewerGORef newSelection, bool expand)

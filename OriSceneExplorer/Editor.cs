@@ -40,6 +40,7 @@ namespace OriSceneExplorer
             hierarchyView.OnTargetGameObject += historyView.Push;
             componentsView.OnFocusProperty += historyView.Push;
             componentsView.OnFocusProperty += obj => hierarchyView.SetSelection(obj, true);
+            componentsView.OnClone += obj => hierarchyView.Refresh(obj);
             historyView.OnSelectionChange += componentsView.Load;
             historyView.OnSelectionChange += obj => hierarchyView.SetSelection(obj, true);
         }
