@@ -23,6 +23,8 @@ namespace OriSceneExplorer
         public event Action<ViewerGORef> OnStartMoving;
         public event Action<ViewerGORef> OnStartRotating;
 
+        string newComponentType = "";
+
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
             PropertyEditorFactory = new PropertyEditorFactory();
@@ -42,6 +44,20 @@ namespace OriSceneExplorer
                     OnStartMoving?.Invoke(referenceGameObject);
                 if (GUILayout.Button("Rotate"))
                     OnStartRotating?.Invoke(referenceGameObject);
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                newComponentType = GUILayout.TextField(newComponentType);
+                if (GUILayout.Button("Add Component", GUILayout.Width(240)))
+                {
+                    var type = Assembly.GetAssembly(typeof(SeinCharacter)).GetType(newComponentType)
+                            ?? Assembly.GetAssembly(typeof(GameObject)).GetType(newComponentType);
+                    if (type != null && typeof(MonoBehaviour).IsAssignableFrom(type))
+                    {
+                        referenceGameObject.Reference.AddComponent(type);
+                        Load(referenceGameObject);
+                    }
+                }
                 GUILayout.EndHorizontal();
 
                 componentsScroll = GUILayout.BeginScrollView(componentsScroll);
