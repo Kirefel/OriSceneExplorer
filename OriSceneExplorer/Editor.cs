@@ -36,6 +36,11 @@ namespace OriSceneExplorer
         bool rotating;
         Transform transformTarget;
 
+        public void Awake()
+        {
+            gameObject.AddComponent<ContextMenuRenderer>();
+        }
+
         public void Start()
         {
             allViews = new EditorView[] { hierarchyView, componentsView, logsView, historyView };
@@ -123,9 +128,11 @@ namespace OriSceneExplorer
 
         public void OnGUI()
         {
-            if (!visible || moving || rotating)
+            if (!visible || moving || rotating || ContextMenu.Open)
                 return;
 
+            GUI.depth = 2;
+             
             hierarchyView.OnGUI();
             componentsView.OnGUI();
             logsView.OnGUI();

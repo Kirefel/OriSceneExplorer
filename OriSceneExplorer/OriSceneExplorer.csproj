@@ -69,6 +69,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextMenu.cs" />
+    <Compile Include="ContextMenuRenderer.cs" />
     <Compile Include="Dispatch.cs" />
     <Compile Include="PropertyEditor.cs" />
     <Compile Include="Views\ComponentsView.cs" />
