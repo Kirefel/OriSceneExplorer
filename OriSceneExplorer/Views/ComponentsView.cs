@@ -41,11 +41,7 @@ namespace OriSceneExplorer
                 {
                     var view = componentViews[i];
 
-                    GUILayout.BeginHorizontal();
-                    if (view.Component is MonoBehaviour mb)
-                        mb.enabled = GUILayout.Toggle(mb.enabled, "", GUILayout.Width(16));
-                    GUILayout.Label(view.ComponentName);
-                    GUILayout.EndHorizontal();
+                    DrawComponentHeader(view);
                     foreach (var kvp in view.Values)
                     {
                         GUILayout.BeginHorizontal();
@@ -70,6 +66,33 @@ namespace OriSceneExplorer
 
                 GUILayout.EndScrollView();
             }
+        }
+
+        private void DrawComponentHeader(ComponentView view)
+        {
+            GUILayout.BeginHorizontal();
+
+            // Toggle button
+            if (view.Component is MonoBehaviour mb)
+            {
+                mb.enabled = GUILayout.Toggle(mb.enabled, "", GUILayout.Width(16));
+            }
+
+            // Name
+            GUILayout.Label(view.ComponentName);
+
+            // Delete button
+            if (view.Component.GetType() != typeof(Transform))
+            {
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("X", GUILayout.Width(20)))
+                {
+                    GameObject.Destroy(view.Component);
+                    this.componentViews.Remove(view);
+                }
+            }
+
+            GUILayout.EndHorizontal();
         }
 
         private void Clone()
@@ -184,7 +207,7 @@ namespace OriSceneExplorer
 
         private ComponentView LoadTransform(Transform transform)
         {
-            var view = new ComponentView { ComponentName = "Transform" };
+            var view = new ComponentView { Component = transform, ComponentName = "Transform" };
             view.Values["Position"] = new PropertyValue(transform.position.ToString(), typeof(Vector3));
             view.Values["Rotation"] = new PropertyValue(transform.eulerAngles.ToString(), typeof(Vector3));
             view.Values["Tag"] = new PropertyValue(transform.tag, typeof(string));
