@@ -98,6 +98,12 @@ namespace OriSceneExplorer
             if (Input.GetKeyDown(KeyCode.Mouse2))
                 hierarchyView.SelectObjectUnderCursor();
 
+            if (Input.GetMouseButtonDown(0) || !transformTarget || !transformTarget.gameObject.activeInHierarchy)
+            {
+                moving = false;
+                rotating = false;
+                transformTarget = null;
+            }
             if (moving)
             {
                 transformTarget.position = GetWorldPositionOnPlane(Input.mousePosition, transformTarget.position.z);
@@ -108,12 +114,6 @@ namespace OriSceneExplorer
                 var delta = pos - transformTarget.position;
                 float z = Mathf.Atan2(delta.y, delta.x);
                 transformTarget.eulerAngles = new Vector3(transformTarget.eulerAngles.x, transformTarget.eulerAngles.y, z * Mathf.Rad2Deg);
-            }
-            if (Input.GetMouseButtonDown(0))
-            {
-                moving = false;
-                rotating = false;
-                transformTarget = null;
             }
         }
 

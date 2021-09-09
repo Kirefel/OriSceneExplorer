@@ -69,10 +69,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inspector\PropertyEditors\Fields\FloatField.cs" />
+    <Compile Include="Inspector\ComponentDescriptor.cs" />
+    <Compile Include="Inspector\ComponentDescriptorCache.cs" />
+    <Compile Include="Inspector\ComponentInspector.cs" />
     <Compile Include="ContextMenu.cs" />
     <Compile Include="ContextMenuRenderer.cs" />
+    <Compile Include="Inspector\PropertyEditors\BoolEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\DefaultEditor.cs" />
     <Compile Include="Dispatch.cs" />
+    <Compile Include="GUILayoutEx.cs" />
+    <Compile Include="Inspector\PropertyDescriptor.cs" />
+    <Compile Include="Inspector\PropertyEditors\FloatEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\IntEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\StringEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\Vector3Editor.cs" />
+    <Compile Include="Inspector\PropertyEditors\Fields\IntField.cs" />
     <Compile Include="PropertyEditor.cs" />
+    <Compile Include="Inspector\PropertyEditorFactory.cs" />
+    <Compile Include="Inspector\PropertyEditors\PropertyEditor.cs" />
+    <Compile Include="Inspector\PropertyInspector.cs" />
+    <Compile Include="Inspector\PropertyEditors\Fields\Vector3Field.cs" />
+    <Compile Include="Inspector\PropertyEditorAttribute.cs" />
     <Compile Include="Views\ComponentsView.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Views\EditorView.cs" />
@@ -85,6 +103,7 @@
     <Compile Include="Views\HistoryView.cs" />
     <Compile Include="Views\LogView.cs" />
     <Compile Include="SearchBox.cs" />
+    <Compile Include="Inspector\ReflectionInfoWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
