@@ -11,6 +11,7 @@ namespace OriSceneExplorer
         const int indentSize = 20;
         List<ViewerGORef> allRefs = new List<ViewerGORef>();
         private bool filtered = false;
+        private bool showDisabled = true;
 
         public event Action<ViewerGORef> OnTargetGameObject;
         private ViewerGORef selection;
@@ -37,6 +38,10 @@ namespace OriSceneExplorer
                 foreach (var goref in allRefs)
                     Collapse(goref);
             }
+            GUILayout.FlexibleSpace();
+
+            showDisabled = GUILayout.Toggle(showDisabled, "Show Disabled");
+
             GUILayout.EndHorizontal();
 
             hierarchyscroll = GUILayout.BeginScrollView(hierarchyscroll);
@@ -49,7 +54,10 @@ namespace OriSceneExplorer
 
         private void DrawRef(ViewerGORef goref)
         {
-            if (filtered && !goref.MatchesFilter)
+            if ((filtered && !goref.MatchesFilter) || (goref.IsScene && goref.Children.Count == 0))
+                return;
+
+            if (!showDisabled && goref.Reference?.activeInHierarchy == false)
                 return;
 
             GUILayout.BeginHorizontal();

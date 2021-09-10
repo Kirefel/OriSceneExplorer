@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -53,11 +54,16 @@ namespace OriSceneExplorer
                 .ToList();
         }
 
+        Regex actionSequenceRegex = new Regex("^\\d\\d\\.");
+
         private ViewerGORef BuildGORef(GameObject go, int depth)
         {
             var children = new List<ViewerGORef>();
             foreach (var tf in go.transform)
                 children.Add(BuildGORef(((Transform)tf).gameObject, depth + 1));
+
+            if (children.Any(c => actionSequenceRegex.IsMatch(c.Name)))
+                children.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             var goref = new ViewerGORef()
             {
