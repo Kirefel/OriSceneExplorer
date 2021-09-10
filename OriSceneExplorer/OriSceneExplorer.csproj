@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inspector\PropertyEditors\ComponentEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\EnumEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\FloatField.cs" />
     <Compile Include="Inspector\ComponentDescriptor.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="GUILayoutEx.cs" />
     <Compile Include="Inspector\PropertyDescriptor.cs" />
     <Compile Include="Inspector\PropertyEditors\FloatEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\GameObjectEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\IntEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\StringEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\Vector3Editor.cs" />

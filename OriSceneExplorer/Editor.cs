@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace OriSceneExplorer
 {
     public class Editor : MonoBehaviour
     {
+        public static Editor Instance { get; private set; }
         public static bool ready = false;
         private bool pause = false;
         private bool visible = false;
@@ -38,7 +40,14 @@ namespace OriSceneExplorer
 
         public void Awake()
         {
+            Instance = this;
             gameObject.AddComponent<ContextMenuRenderer>();
+        }
+
+        public void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
 
         public void Start()
@@ -166,5 +175,7 @@ namespace OriSceneExplorer
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
+
+        public void NavigateToGameObject(GameObject gameObject) => componentsView.NavigateToGameObject(gameObject);
     }
 }

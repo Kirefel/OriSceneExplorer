@@ -64,39 +64,6 @@ namespace OriSceneExplorer
                     inspector.Draw();
                     GUILayout.Space(30);
                 }
-                //for (int i = 0; i < componentViews.Count; i++)
-                //{
-                //    var view = componentViews[i];
-
-                //    DrawComponentHeader(view);
-                //    if (view.Expanded)
-                //    {
-                //        foreach (var kvp in view.Values)
-                //        {
-                //            GUILayout.BeginHorizontal();
-                //            GUILayout.Label(kvp.Key, GUILayout.Width(240));
-                //            GUILayout.Label(kvp.Value.TypeName, GUILayout.Width(160));
-
-                //            if (kvp.Value.Reference != null)
-                //            {
-                //                // Modifies collection so cancel now and get rebuilt next call
-                //                if (DrawButton(kvp.Value))
-                //                    break;
-                //            }
-                //            else
-                //            {
-                //                //if (kvp.Value.Reference != null)
-                //                kvp.Value.Editor.Draw();
-                //                //else
-                //                //    GUILayout.Label(kvp.Value.Editor.StringValue());
-                //            }
-
-                //            GUILayout.EndHorizontal();
-                //        }
-                //    }
-
-                //    GUILayout.Space(30);
-                //}
 
                 GUILayout.EndScrollView();
             }
@@ -130,21 +97,16 @@ namespace OriSceneExplorer
             Debug.Log("Written to scene.txt");
         }
 
-        //private bool DrawButton(PropertyValue value)
-        //{
-        //    if (GUILayout.Button(value.Editor.StringValue(), "Label"))
-        //    {
-        //        var goref = new ViewerGORef()
-        //        {
-        //            Name = value.Reference.gameObject.name,
-        //            Reference = value.Reference
-        //        };
-        //        Load(goref);
-        //        OnFocusProperty?.Invoke(goref);
-        //        return true;
-        //    }
-        //    return false;
-        //}
+        public void NavigateToGameObject(GameObject go)
+        {
+            var goref = new ViewerGORef()
+            {
+                Name = go.name,
+                Reference = go
+            };
+            Load(goref);
+            OnFocusProperty?.Invoke(goref);
+        }
 
         public void Load(ViewerGORef goref)
         {
@@ -166,52 +128,5 @@ namespace OriSceneExplorer
                 }
             }
         }
-
-    //    private static string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled", "enabled" };
-    //    private PropertyValue LoadEditor(ReflectionInfoWrapper field, Component instance)
-    //    {
-    //        object objValue;
-    //        try
-    //        {
-    //            objValue = field.GetValue(instance);
-    //        }
-    //        catch
-    //        {
-    //            return new PropertyValue(new ConstantEditor("(Unable to load value)"), field.Type);
-    //        }
-
-    //        // Null -> (null)
-    //        if (objValue == null)
-    //            return new PropertyValue("(null)", field.Type);
-
-    //        // Component -> GameObjectName (ComponentType)
-    //        if (typeof(Component).IsAssignableFrom(field.Type))
-    //        {
-    //            var componentValue = objValue as Component;
-    //            return new PropertyValue($"{componentValue.gameObject.name} ({componentValue.GetType().Name})", field.Type) { Reference = componentValue.gameObject };
-    //        }
-
-    //        // GameObject -> GameObjectName
-    //        if (typeof(GameObject).IsAssignableFrom(field.Type))
-    //        {
-    //            var goValue = objValue as GameObject;
-    //            return new PropertyValue(goValue.name, field.Type) { Reference = goValue };
-    //        }
-
-    //        // List/Array -> [ 0, 1, 2 ]
-    //        // Dictionary -> { Key.ToString : Value.ToString }
-    //        if (typeof(IEnumerable).IsAssignableFrom(field.Type) && !typeof(string).IsAssignableFrom(field.Type))
-    //        {
-    //            var enumerableValue = objValue as IEnumerable;
-    //            return new PropertyValue($"{enumerableValue.Cast<object>().Count()} items", field.Type);
-    //        }
-
-    //        // string, int, bool etc. -> draw value
-    //        if (field.CanWrite)
-    //            return new PropertyValue(PropertyEditorFactory.CreateEditor(field, instance), field.Type);
-    //        else
-    //            return new PropertyValue(objValue.ToString(), field.Type);
-    //    }
-    //}
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace OriSceneExplorer.Inspector
 {
@@ -32,6 +33,12 @@ namespace OriSceneExplorer.Inspector
 
             if (descriptor.Info.Type.IsEnum)
                 return new EnumEditor(descriptor.Info.Type);
+
+            if (typeof(Component).IsAssignableFrom(descriptor.Info.Type))
+                return new ComponentEditor();
+
+            if (typeof(GameObject).IsAssignableFrom(descriptor.Info.Type))
+                return new GameObjectEditor();
 
             return new DefaultEditor();
         }
