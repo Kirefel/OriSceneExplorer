@@ -132,7 +132,7 @@ namespace OriSceneExplorer
                 return;
 
             GUI.depth = 2;
-             
+
             hierarchyView.OnGUI();
             componentsView.OnGUI();
             logsView.OnGUI();

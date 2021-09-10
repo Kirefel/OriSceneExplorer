@@ -30,8 +30,8 @@ namespace OriSceneExplorer.Inspector
             if (editors.ContainsKey(descriptor.Info.Type))
                 return editors[descriptor.Info.Type]();
 
-            //if (wrapper.MemberType.IsEnum)
-            //    return new EnumEditorNew(descriptor.Info.Type);
+            if (descriptor.Info.Type.IsEnum)
+                return new EnumEditor(descriptor.Info.Type);
 
             return new DefaultEditor();
         }

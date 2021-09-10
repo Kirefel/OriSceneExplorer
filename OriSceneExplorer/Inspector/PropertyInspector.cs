@@ -37,7 +37,6 @@ namespace OriSceneExplorer.Inspector
 
             GUILayout.EndHorizontal();
         }
-
         public string GetStringValue() => Editor.FormatString(cachedValue);
     }
 }
