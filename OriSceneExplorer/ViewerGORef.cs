@@ -20,6 +20,11 @@ namespace OriSceneExplorer
             {
                 if (reference == null || !reference.IsAlive)
                     return null;
+
+                var value = reference.Target as GameObject;
+                if (!value)
+                    return null;
+
                 return reference.Target as GameObject;
             }
             set

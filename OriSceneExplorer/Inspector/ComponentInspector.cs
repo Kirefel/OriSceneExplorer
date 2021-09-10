@@ -33,7 +33,9 @@ namespace OriSceneExplorer.Inspector
             bool editable = true;
             if (!componentInstance)
             {
+                GUI.color = Color.red;
                 GUILayout.Label("Component has been destroyed");
+                GUI.color = Color.white;
                 editable = false;
             }
 
