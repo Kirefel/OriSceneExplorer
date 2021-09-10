@@ -94,6 +94,7 @@
     <Compile Include="Inspector\PropertyInspector.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\Vector3Field.cs" />
     <Compile Include="Inspector\PropertyEditorAttribute.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Views\ComponentsView.cs" />
     <Compile Include="Editor.cs" />
     <Compile Include="Views\EditorView.cs" />

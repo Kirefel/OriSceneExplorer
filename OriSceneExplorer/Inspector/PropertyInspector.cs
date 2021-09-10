@@ -20,8 +20,8 @@ namespace OriSceneExplorer.Inspector
         {
             GUILayout.BeginHorizontal();
 
-            GUILayout.Label(Descriptor.Name, GUILayout.Width(240));
-            GUILayout.Label(Descriptor.TypeName, GUILayout.Width(160));
+            GUILayout.Label(Descriptor.Name, GUILayout.Width(OriSceneExplorer.Editor.EditorSettings.PropertyNameColumnWidth));
+            GUILayout.Label(Descriptor.TypeName, GUILayout.Width(OriSceneExplorer.Editor.EditorSettings.PropertyTypeColumnWidth));
 
             if (!editable || !Descriptor.Info.CanWrite || !instance)
             {

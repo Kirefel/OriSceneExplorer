@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using OriSceneExplorer.Configuration;
 
 namespace OriSceneExplorer
 {
@@ -15,6 +15,8 @@ namespace OriSceneExplorer
         private readonly ComponentsView componentsView = new ComponentsView(4, 0, 4, 12);
         private readonly LogView logsView = new LogView(8, 6, 4, 6);
         private readonly HistoryView historyView = new HistoryView(8, 0, 4, 6);
+
+        public static Settings EditorSettings { get; private set; }
 
         public bool Paused
         {
@@ -63,6 +65,11 @@ namespace OriSceneExplorer
             componentsView.OnStartRotating += ComponentsView_OnStartRotating;
             historyView.OnSelectionChange += componentsView.Load;
             historyView.OnSelectionChange += obj => hierarchyView.SetSelection(obj, true);
+
+            EditorSettings = Settings.LoadAll();
+
+            DebugMenuB.DebugControlsEnabled = EditorSettings.EnableDebugControls;
+            autoPause = EditorSettings.AutoPause;
         }
 
         private void ComponentsView_OnStartRotating(ViewerGORef obj)
@@ -81,7 +88,7 @@ namespace OriSceneExplorer
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F1))
+            if (Input.GetKeyDown(EditorSettings.ToggleView))
             {
                 visible = !visible;
                 if (autoPause)
@@ -92,19 +99,19 @@ namespace OriSceneExplorer
                     hierarchyView.Refresh();
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
+            if (Input.GetKeyDown(EditorSettings.Suspend))
                 Paused = !Paused;
 
-            if (Input.GetKeyDown(KeyCode.F5))
+            if (Input.GetKeyDown(EditorSettings.RefreshHierarchy))
             {
                 hierarchyView.Refresh();
                 historyView.Reset();
             }
 
-            if (Input.GetKeyDown(KeyCode.F4))
+            if (Input.GetKeyDown(EditorSettings.ClearLogs))
                 logsView.ClearLogs();
 
-            if (Input.GetKeyDown(KeyCode.Mouse2))
+            if (Input.GetKeyDown(EditorSettings.PickObject))
                 hierarchyView.SelectObjectUnderCursor();
 
             if (Input.GetMouseButtonDown(0) || !transformTarget || !transformTarget.gameObject.activeInHierarchy)
