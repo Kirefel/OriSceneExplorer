@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComponentSelection.cs" />
     <Compile Include="Inspector\PropertyEditors\ComponentEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\EnumEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\FloatField.cs" />

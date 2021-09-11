@@ -1,4 +1,5 @@
 ﻿using OriSceneExplorer.Inspector.PropertyEditors;
+using System;
 using UnityEngine;
 
 namespace OriSceneExplorer.Inspector
@@ -8,12 +9,21 @@ namespace OriSceneExplorer.Inspector
         public PropertyDescriptor Descriptor { get; }
         public PropertyEditor Editor { get; }
         private object cachedValue;
+        private bool error = false;
 
         public PropertyInspector(PropertyDescriptor descriptor, Component instance)
         {
             Descriptor = descriptor;
             Editor = PropertyEditorFactory.CreateEditor(descriptor);
-            cachedValue = descriptor.Info.GetValue(instance);
+            try
+            {
+                cachedValue = descriptor.Info.GetValue(instance);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                error = true;
+            }
         }
 
         public void Draw(bool editable, Component instance)
@@ -23,7 +33,11 @@ namespace OriSceneExplorer.Inspector
             GUILayout.Label(Descriptor.Name, GUILayout.Width(OriSceneExplorer.Editor.EditorSettings.PropertyNameColumnWidth));
             GUILayout.Label(Descriptor.TypeName, GUILayout.Width(OriSceneExplorer.Editor.EditorSettings.PropertyTypeColumnWidth));
 
-            if (!editable || !Descriptor.Info.CanWrite || !instance)
+            if (error)
+            {
+                GUILayout.Label("(error occurred getting value)");
+            }
+            else if (!editable || !Descriptor.Info.CanWrite || !instance)
             {
                 // Readonly mode
                 GUILayout.Label(GetStringValue());

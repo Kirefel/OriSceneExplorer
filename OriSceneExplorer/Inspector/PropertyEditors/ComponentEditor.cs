@@ -12,7 +12,21 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
             {
                 if (GUILayout.Button(FormatString(value), "Label"))
                 {
-                    Dispatch.Queue(() => Editor.Instance.NavigateToGameObject(component.gameObject));
+                    if (Event.current.button == 0)
+                    {
+                        // Left click = select
+                        Dispatch.Queue(() => Editor.Instance.NavigateToGameObject(component.gameObject));
+                    }
+                    else if (Event.current.button == 1 && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+                    {
+                        value = null;
+                        return true;
+                    }
+                    else if (Event.current.button == 1 && ComponentSelection.Selection != null && component.GetType().IsAssignableFrom(ComponentSelection.Selection.GetType()))
+                    {
+                        value = ComponentSelection.Selection;
+                        return true;
+                    }
                 }
             }
             else

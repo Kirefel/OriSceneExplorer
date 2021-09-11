@@ -65,6 +65,13 @@ namespace OriSceneExplorer
                 }
                 GUILayout.EndHorizontal();
 
+                if (ComponentSelection.Selection != null)
+                {
+                    GUILayout.Label($"Ready to set value to {ComponentSelection.Selection.name} ({ComponentSelection.Selection.GetType().Name})");
+                }
+
+                GUILayout.Space(20);
+
                 componentsScroll = GUILayout.BeginScrollView(componentsScroll);
 
                 foreach (var inspector in inspectors)

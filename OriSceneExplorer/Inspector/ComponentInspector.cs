@@ -55,7 +55,12 @@ namespace OriSceneExplorer.Inspector
 
             // Name
             if (GUILayout.Button(Name, "Label"))
-                expanded = !expanded;
+            {
+                if (Event.current.button == 0)
+                    expanded = !expanded;
+                else if (Event.current.button == 1)
+                    ComponentSelection.Selection = componentInstance;
+            }
 
             // Delete button
             if (canDelete)
