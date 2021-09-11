@@ -11,7 +11,7 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
             if (value == null)
                 str = "";
 
-            string newValue = GUILayout.TextField(str);
+            string newValue = GUILayout.TextField(str, GUILayout.MaxWidth(ComponentsView.MaxValueWidth));
 
             if (newValue != str)
             {

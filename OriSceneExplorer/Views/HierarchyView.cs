@@ -29,11 +29,11 @@ namespace OriSceneExplorer
         {
             filterBox.Draw();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Refresh", GUILayout.Width(250)))
+            if (GUILayout.Button("Refresh"))
             {
                 Refresh();
             }
-            if (GUILayout.Button("Collapse All", GUILayout.Width(250)))
+            if (GUILayout.Button("Collapse All"))
             {
                 foreach (var goref in allRefs)
                     Collapse(goref);

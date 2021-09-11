@@ -12,9 +12,9 @@ namespace OriSceneExplorer
         private bool autoPause = true;
 
         private readonly HierarchyView hierarchyView = new HierarchyView(0, 0, 4, 12);
-        private readonly ComponentsView componentsView = new ComponentsView(4, 0, 4, 12);
-        private readonly LogView logsView = new LogView(8, 6, 4, 6);
-        private readonly HistoryView historyView = new HistoryView(8, 0, 4, 6);
+        private readonly ComponentsView componentsView = new ComponentsView(4, 0, 5, 12);
+        private readonly LogView logsView = new LogView(9, 6, 3, 6);
+        private readonly HistoryView historyView = new HistoryView(9, 0, 3, 6);
 
         public static Settings EditorSettings { get; private set; }
 

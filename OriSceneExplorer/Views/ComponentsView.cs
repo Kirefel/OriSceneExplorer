@@ -20,6 +20,7 @@ namespace OriSceneExplorer
         public event Action<ViewerGORef> OnStartRotating;
 
         string newComponentType = "";
+        public static float MaxValueWidth;
 
         public ComponentsView(int col, int row, int width, int height) : base(col, row, width, height, "GameObject")
         {
@@ -27,6 +28,8 @@ namespace OriSceneExplorer
 
         protected override void Draw(int windowID)
         {
+            MaxValueWidth = this.windowRect.width - Editor.EditorSettings.PropertyNameColumnWidth - Editor.EditorSettings.PropertyTypeColumnWidth - 55; // 55 for scroll bar and insets
+
             if (referenceGameObject != null)
             {
                 GUILayout.TextField(fullPath);
@@ -44,15 +47,20 @@ namespace OriSceneExplorer
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                newComponentType = GUILayout.TextField(newComponentType);
-                if (GUILayout.Button("Add Component", GUILayout.Width(240)))
+                newComponentType = GUILayout.TextField(newComponentType, GUILayout.ExpandWidth(true));
+                if (GUILayout.Button("Add Component", GUILayout.ExpandWidth(false)))
                 {
                     var type = Assembly.GetAssembly(typeof(SeinCharacter)).GetType(newComponentType)
                             ?? Assembly.GetAssembly(typeof(GameObject)).GetType(newComponentType);
-                    if (type != null && typeof(MonoBehaviour).IsAssignableFrom(type))
+                    if (type != null && typeof(Component).IsAssignableFrom(type))
                     {
                         referenceGameObject.Reference.AddComponent(type);
                         Load(referenceGameObject);
+                        Debug.Log($"Added {type.Name} to {referenceGameObject.Name}");
+                    }
+                    else
+                    {
+                        Debug.Log($"The type {newComponentType} could not be found. Ensure it derives from Component and the namespace is included.");
                     }
                 }
                 GUILayout.EndHorizontal();

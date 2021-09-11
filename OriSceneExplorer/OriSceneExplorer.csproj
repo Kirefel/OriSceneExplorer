@@ -82,9 +82,11 @@
     <Compile Include="Dispatch.cs" />
     <Compile Include="GUILayoutEx.cs" />
     <Compile Include="Inspector\PropertyDescriptor.cs" />
+    <Compile Include="Inspector\PropertyEditors\Fields\Vector4Field.cs" />
     <Compile Include="Inspector\PropertyEditors\FloatEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\GameObjectEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\IntEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\RectEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\StringEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\Vector3Editor.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\IntField.cs" />

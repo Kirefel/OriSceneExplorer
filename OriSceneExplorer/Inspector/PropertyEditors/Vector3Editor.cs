@@ -14,7 +14,7 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
                 field = new Vector3Field((Vector3)value);
 
 
-            Vector3 newValue = field.Draw((Vector3)value);
+            Vector3 newValue = field.Draw(GUILayout.MaxWidth(ComponentsView.MaxValueWidth));
             if (newValue != (Vector3)value)
             {
                 value = newValue;

@@ -1,4 +1,5 @@
 ﻿using OriSceneExplorer.Inspector.PropertyEditors.Fields;
+using UnityEngine;
 
 namespace OriSceneExplorer.Inspector.PropertyEditors
 {
@@ -12,7 +13,7 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
             if (field == null)
                 field = new FloatField((float)value);
 
-            float newValue = field.Draw((float)value);
+            float newValue = field.Draw((float)value, GUILayout.MaxWidth(ComponentsView.MaxValueWidth));
 
             if (newValue != (float)value)
             {

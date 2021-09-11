@@ -4,7 +4,7 @@ namespace OriSceneExplorer
 {
     public abstract class EditorView
     {
-        Rect windowRect;
+        protected Rect windowRect;
         private readonly Rect initialPosition;
         public string Title { get; set; }
         public bool Visible { get; set; } = true;

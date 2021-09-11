@@ -20,14 +20,17 @@ namespace OriSceneExplorer.Inspector.PropertyEditors.Fields
             float retVal = value;
             stringValue = GUILayout.TextField(stringValue, options);
 
-            if (float.TryParse(stringValue, out float i))
+            if (GUI.changed)
             {
-                retVal = i;
-                valid = true;
-            }
-            else
-            {
-                valid = false;
+                if (float.TryParse(stringValue, out float i))
+                {
+                    retVal = i;
+                    valid = true;
+                }
+                else
+                {
+                    valid = false;
+                }
             }
 
             GUI.backgroundColor = c;
