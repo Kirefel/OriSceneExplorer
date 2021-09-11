@@ -35,7 +35,7 @@ namespace OriSceneExplorer.Inspector
                 return new EnumEditor(descriptor.Info.Type);
 
             if (typeof(Component).IsAssignableFrom(descriptor.Info.Type))
-                return new ComponentEditor();
+                return new ComponentEditor(descriptor.Info.Type);
 
             if (typeof(GameObject).IsAssignableFrom(descriptor.Info.Type))
                 return new GameObjectEditor();

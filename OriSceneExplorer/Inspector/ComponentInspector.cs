@@ -50,7 +50,7 @@ namespace OriSceneExplorer.Inspector
             GUILayout.BeginHorizontal();
 
             // Toggle button
-            if (componentInstance is MonoBehaviour mb)
+            if (componentInstance && componentInstance is MonoBehaviour mb)
                 mb.enabled = GUILayout.Toggle(mb.enabled, "", GUILayout.Width(16));
 
             // Name
@@ -63,7 +63,7 @@ namespace OriSceneExplorer.Inspector
             }
 
             // Delete button
-            if (canDelete)
+            if (componentInstance && canDelete)
             {
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("X", GUILayout.Width(20)))

@@ -8,34 +8,27 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
         {
             GameObject gameObject = value as GameObject;
 
-            if (gameObject)
+            if (GUILayout.Button(FormatString(value), "Label"))
             {
-                if (GUILayout.Button(FormatString(value), "Label"))
+                if (gameObject && Event.current.button == 0)
                 {
-                    if (Event.current.button == 0)
+                    // Left click = select
+                    Dispatch.Queue(() => Editor.Instance.NavigateToGameObject(gameObject));
+                }
+                else if (gameObject && Event.current.button == 1 && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+                {
+                    value = null;
+                    return true;
+                }
+                else
+                {
+                    var selectionGameObject = ComponentSelection.Selection?.gameObject;
+                    if (selectionGameObject)
                     {
-                        // Left click = select
-                        Dispatch.Queue(() => Editor.Instance.NavigateToGameObject(gameObject));
-                    }
-                    else if (Event.current.button == 1 && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
-                    {
-                        value = null;
+                        value = selectionGameObject;
                         return true;
                     }
-                    else
-                    {
-                        var selectionGameObject = ComponentSelection.Selection?.gameObject;
-                        if (selectionGameObject)
-                        {
-                            value = selectionGameObject;
-                            return true;
-                        }
-                    }
                 }
-            }
-            else
-            {
-                GUILayout.Label(FormatString(value));
             }
 
             return false;
