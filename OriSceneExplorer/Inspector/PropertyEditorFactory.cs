@@ -27,24 +27,26 @@ namespace OriSceneExplorer.Inspector
             }
         }
 
-        public static PropertyEditor CreateEditor(PropertyDescriptor descriptor)
+        public static PropertyEditor CreateEditor(PropertyDescriptor descriptor) => CreateEditor(descriptor.Info.Type);
+
+        public static PropertyEditor CreateEditor(Type type)
         {
-            if (editors.ContainsKey(descriptor.Info.Type))
-                return editors[descriptor.Info.Type]();
+            if (editors.ContainsKey(type))
+                return editors[type]();
 
-            if (descriptor.Info.Type.IsEnum)
-                return new EnumEditor(descriptor.Info.Type);
+            if (type.IsEnum)
+                return new EnumEditor(type);
 
-            if (typeof(Component).IsAssignableFrom(descriptor.Info.Type))
-                return new ComponentEditor(descriptor.Info.Type);
+            if (typeof(Component).IsAssignableFrom(type))
+                return new ComponentEditor(type);
 
-            if (typeof(GameObject).IsAssignableFrom(descriptor.Info.Type))
+            if (typeof(GameObject).IsAssignableFrom(type))
                 return new GameObjectEditor();
 
-            if (typeof(IEnumerable).IsAssignableFrom(descriptor.Info.Type))
-                return new EnumerableEditor();
+            if (typeof(IEnumerable).IsAssignableFrom(type))
+                return new EnumerableEditor(type);
 
-            return new DefaultEditor(descriptor.Info.Type);
+            return new DefaultEditor(type);
         }
     }
 }

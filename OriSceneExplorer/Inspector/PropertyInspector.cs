@@ -21,7 +21,10 @@ namespace OriSceneExplorer.Inspector
             }
             catch (Exception ex)
             {
+#if DEBUG
+                // Errors thrown by the target are normal, just ignore them
                 Debug.LogException(ex);
+#endif
                 error = true;
             }
         }
