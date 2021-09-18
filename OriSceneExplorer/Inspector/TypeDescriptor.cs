@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace OriSceneExplorer.Inspector
 {
-    public class ComponentDescriptor
+    public class TypeDescriptor
     {
         private readonly string componentName;
         public List<PropertyDescriptor> Properties { get; }
 
         private static readonly string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled", "enabled" };
 
-        public ComponentDescriptor(Type componentType)
+        public TypeDescriptor(Type componentType)
         {
             componentName = componentType.Name;
             Properties = new List<PropertyDescriptor>();
@@ -21,7 +21,7 @@ namespace OriSceneExplorer.Inspector
             foreach (PropertyInfo propertyInfo in componentType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 ReflectionInfoWrapper wrapper = new ReflectionInfoWrapper(propertyInfo);
-                if (wrapper.CanRead && !exclusions.Contains(propertyInfo.Name))
+                if (wrapper.CanRead && !exclusions.Contains(propertyInfo.Name) && !wrapper.IsIndex)
                     Properties.Add(new PropertyDescriptor(wrapper));
             }
             foreach (FieldInfo fieldInfo in componentType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -31,7 +31,7 @@ namespace OriSceneExplorer.Inspector
             }
         }
 
-        public ComponentDescriptor(Type componentType, params string[] propertyNames)
+        public TypeDescriptor(Type componentType, params string[] propertyNames)
         {
             componentName = componentType.Name;
             Properties = new List<PropertyDescriptor>();

@@ -17,24 +17,22 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
             }
 
             var enumerable = value as IEnumerable;
-            if (enumerable == null)
-            {
-                Debug.Log("enumerable is null");
-                return false;
-            }
 
-            if (this.Expanded)
-            {
-                int index = 0;
-                foreach (var val in enumerable)
-                    GUILayout.Label($"{index++}: {val}");
-            }
-            else
-            {
-                GUILayout.Label($"{enumerable.Cast<object>().Count()} items");
-            }
+            GUILayout.Label($"{enumerable.Cast<object>().Count()} items");
 
             return false;
+        }
+
+        public override void DrawExpanded(object value)
+        {
+            var enumerable = value as IEnumerable;
+
+            if (enumerable == null)
+                return;
+
+            int index = 0;
+            foreach (var val in enumerable)
+                GUILayout.Label($"{index++}: {val}");
         }
     }
 }

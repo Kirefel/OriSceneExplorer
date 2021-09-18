@@ -7,20 +7,17 @@ namespace OriSceneExplorer.Inspector
     {
         public string Name { get; }
         private Component componentInstance;
-        private readonly PropertyInspector[] propertyInspectors;
 
         private bool expanded = true;
         private readonly bool canDelete = false;
+        private TypeInspector typeInspector;
 
-        public ComponentInspector(string name, Component componentInstance, ComponentDescriptor componentDescriptor)
+        public ComponentInspector(string name, Component componentInstance, TypeDescriptor componentDescriptor)
         {
             Name = name;
             this.componentInstance = componentInstance;
             canDelete = !(componentInstance is Transform);
-
-            propertyInspectors = new PropertyInspector[componentDescriptor.Properties.Count];
-            for (int i = 0; i < componentDescriptor.Properties.Count; i++)
-                propertyInspectors[i] = new PropertyInspector(componentDescriptor.Properties[i], componentInstance);
+            typeInspector = new TypeInspector(componentDescriptor, componentInstance);
         }
 
         public void Draw()
@@ -39,8 +36,7 @@ namespace OriSceneExplorer.Inspector
                 editable = false;
             }
 
-            for (int i = 0; i < propertyInspectors.Length; i++)
-                propertyInspectors[i].Draw(editable, componentInstance);
+            typeInspector.Draw(editable, componentInstance);
 
             GUILayoutEx.HorizontalDivider();
         }
@@ -78,32 +74,32 @@ namespace OriSceneExplorer.Inspector
 
         public void WriteToStream(StreamWriter stream)
         {
-            stream.WriteLine(Name);
-            int longestName = 0, longestType = 0;
-            foreach (var propInspector in propertyInspectors)
-            {
-                if (propInspector.Descriptor.Name.Length > longestName)
-                    longestName = propInspector.Descriptor.Name.Length;
-                if (propInspector.Descriptor.TypeName.Length > longestType)
-                    longestType = propInspector.Descriptor.TypeName.Length;
-            }
+            //stream.WriteLine(Name);
+            //int longestName = 0, longestType = 0;
+            //foreach (var propInspector in propertyInspectors)
+            //{
+            //    if (propInspector.Descriptor.Name.Length > longestName)
+            //        longestName = propInspector.Descriptor.Name.Length;
+            //    if (propInspector.Descriptor.TypeName.Length > longestType)
+            //        longestType = propInspector.Descriptor.TypeName.Length;
+            //}
 
-            foreach (var propInspector in propertyInspectors)
-            {
-                stream.Write(propInspector.Descriptor.Name);
-                stream.Write(new string(' ', longestName - propInspector.Descriptor.Name.Length));
-                stream.Write("  ");
+            //foreach (var propInspector in propertyInspectors)
+            //{
+            //    stream.Write(propInspector.Descriptor.Name);
+            //    stream.Write(new string(' ', longestName - propInspector.Descriptor.Name.Length));
+            //    stream.Write("  ");
 
-                stream.Write(propInspector.Descriptor.TypeName);
-                stream.Write(new string(' ', longestType - propInspector.Descriptor.TypeName.Length));
-                stream.Write("  ");
+            //    stream.Write(propInspector.Descriptor.TypeName);
+            //    stream.Write(new string(' ', longestType - propInspector.Descriptor.TypeName.Length));
+            //    stream.Write("  ");
 
-                int inset = longestName + longestType + 4;
-                string value = propInspector.GetStringValue();
-                stream.WriteLine(value.Replace("\n", "\n" + new string(' ', inset)));
-            }
+            //    int inset = longestName + longestType + 4;
+            //    string value = propInspector.GetStringValue();
+            //    stream.WriteLine(value.Replace("\n", "\n" + new string(' ', inset)));
+            //}
 
-            stream.WriteLine();
+            //stream.WriteLine();
         }
     }
 }

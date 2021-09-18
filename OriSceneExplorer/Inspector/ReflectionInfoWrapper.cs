@@ -46,6 +46,7 @@ namespace OriSceneExplorer.Inspector
         public bool CanWrite => _fieldInfo != null || _propertyInfo.CanWrite;
         public string Name => _fieldInfo?.Name ?? _propertyInfo.Name;
         public string TypeName => GetFormattedName(Type);
+        public bool IsIndex => _propertyInfo?.GetIndexParameters().Length > 0;
 
         private static string GetFormattedName(Type type)
         {

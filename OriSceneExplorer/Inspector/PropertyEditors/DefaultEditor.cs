@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System;
 using UnityEngine;
 
 namespace OriSceneExplorer.Inspector.PropertyEditors
@@ -7,32 +6,38 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
     public class DefaultEditor : PropertyEditor
     {
         private string cachedString;
+        TypeInspector typeInspector;
+
+        public DefaultEditor(Type type) : base(true, true)
+        {
+            if (type.Namespace == "System.Reflection")
+                CanExpand = false; // yeah just... nah not touching that
+        }
 
         public override bool Draw(ref object value)
         {
+            if (value == null)
+                CanExpand = false; // This also disables actually reading the values immediately
+
             // These can't be changed so don't calculate label every frame
             if (cachedString == null)
+            {
                 cachedString = FormatString(value);
+                if (CanExpand)
+                    typeInspector = new TypeInspector(TypeDescriptorCache.GetDescriptor(value.GetType()), value);
+            }
 
             GUILayout.Label(cachedString);
+
             return false;
         }
 
-        public override string FormatString(object value)
+        public override void DrawExpanded(object value)
         {
-            // Null -> (null)
-            if (value == null)
-                return "(null)";
-
-            // List/Array -> [ 0, 1, 2 ]
-            // Dictionary -> { Key.ToString : Value.ToString }
-            if (typeof(IEnumerable).IsAssignableFrom(value.GetType()) && !typeof(string).IsAssignableFrom(value.GetType()))
+            if (value != null && typeInspector != null)
             {
-                var enumerableValue = value as IEnumerable;
-                return $"{enumerableValue.Cast<object>().Count()} items";
+                typeInspector.Draw(false, value);
             }
-
-            return base.FormatString(value);
         }
     }
 }

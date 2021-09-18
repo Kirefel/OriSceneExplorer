@@ -138,7 +138,7 @@ namespace OriSceneExplorer
 
                 foreach (var component in components)
                 {
-                    var descriptor = ComponentDescriptorCache.GetDescriptor(component.GetType());
+                    var descriptor = TypeDescriptorCache.GetDescriptor(component.GetType());
                     inspectors.Add(descriptor.BuildInspector(component));
                 }
             }

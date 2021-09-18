@@ -44,7 +44,7 @@ namespace OriSceneExplorer.Inspector
             if (typeof(IEnumerable).IsAssignableFrom(descriptor.Info.Type))
                 return new EnumerableEditor();
 
-            return new DefaultEditor();
+            return new DefaultEditor(descriptor.Info.Type);
         }
     }
 }

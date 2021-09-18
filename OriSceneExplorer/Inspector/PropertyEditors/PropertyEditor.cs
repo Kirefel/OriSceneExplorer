@@ -2,7 +2,7 @@
 {
     public abstract class PropertyEditor
     {
-        public bool CanExpand { get; }
+        public bool CanExpand { get; protected set; }
 
         private bool expanded = false;
         public bool Expanded
@@ -20,6 +20,7 @@
         }
 
         public abstract bool Draw(ref object value);
+        public virtual void DrawExpanded(object value) { }
         public virtual string FormatString(object value) => value == null ? "(null)" : value.ToString();
     }
 }

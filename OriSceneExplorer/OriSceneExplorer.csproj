@@ -74,8 +74,8 @@
     <Compile Include="Inspector\PropertyEditors\EnumEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\EnumerableEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\FloatField.cs" />
-    <Compile Include="Inspector\ComponentDescriptor.cs" />
-    <Compile Include="Inspector\ComponentDescriptorCache.cs" />
+    <Compile Include="Inspector\TypeDescriptor.cs" />
+    <Compile Include="Inspector\TypeDescriptorCache.cs" />
     <Compile Include="Inspector\ComponentInspector.cs" />
     <Compile Include="ContextMenu.cs" />
     <Compile Include="ContextMenuRenderer.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Inspector\PropertyEditors\Vector2Editor.cs" />
     <Compile Include="Inspector\PropertyEditors\Vector3Editor.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\IntField.cs" />
+    <Compile Include="Inspector\TypeInspector.cs" />
     <Compile Include="PropertyEditor.cs" />
     <Compile Include="Inspector\PropertyEditorFactory.cs" />
     <Compile Include="Inspector\PropertyEditors\PropertyEditor.cs" />

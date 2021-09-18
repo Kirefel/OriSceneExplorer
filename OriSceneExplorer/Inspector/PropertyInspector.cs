@@ -11,7 +11,7 @@ namespace OriSceneExplorer.Inspector
         private object cachedValue;
         private readonly bool error = false;
 
-        public PropertyInspector(PropertyDescriptor descriptor, Component instance)
+        public PropertyInspector(PropertyDescriptor descriptor, object instance)
         {
             Descriptor = descriptor;
             Editor = PropertyEditorFactory.CreateEditor(descriptor);
@@ -26,7 +26,7 @@ namespace OriSceneExplorer.Inspector
             }
         }
 
-        public void Draw(bool editable, Component instance)
+        public void Draw(bool editable, object instance)
         {
             GUILayout.BeginHorizontal();
 
@@ -49,7 +49,7 @@ namespace OriSceneExplorer.Inspector
                 GUILayout.Label("(error occurred getting value)");
                 GUILayout.EndHorizontal();
             }
-            else if (!editable || (!Descriptor.Info.CanWrite && !Editor.DrawWhenReadonly) || !instance)
+            else if (((!editable || !Descriptor.Info.CanWrite) && !Editor.DrawWhenReadonly) || instance == null || (instance is Component c && !c))
             {
                 // Readonly mode
                 GUILayout.Label(GetStringValue());
@@ -58,20 +58,17 @@ namespace OriSceneExplorer.Inspector
             else
             {
                 // Writable property (update cached value, then synchronise)
+                if (Editor.Draw(ref cachedValue))
+                    Descriptor.Info.SetValue(instance, cachedValue);
+                GUILayout.EndHorizontal();
+
                 if (Editor.Expanded)
                 {
-                    GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                     GUILayout.Space(32);
                     GUILayout.BeginVertical();
-                    Editor.Draw(ref cachedValue);
+                    Editor.DrawExpanded(cachedValue);
                     GUILayout.EndVertical();
-                    GUILayout.EndHorizontal();
-                }
-                else
-                {
-                    if (Editor.Draw(ref cachedValue))
-                        Descriptor.Info.SetValue(instance, cachedValue);
                     GUILayout.EndHorizontal();
                 }
             }
