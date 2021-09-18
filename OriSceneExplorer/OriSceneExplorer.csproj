@@ -72,6 +72,7 @@
     <Compile Include="ComponentSelection.cs" />
     <Compile Include="Inspector\PropertyEditors\ComponentEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\EnumEditor.cs" />
+    <Compile Include="Inspector\PropertyEditors\EnumerableEditor.cs" />
     <Compile Include="Inspector\PropertyEditors\Fields\FloatField.cs" />
     <Compile Include="Inspector\ComponentDescriptor.cs" />
     <Compile Include="Inspector\ComponentDescriptorCache.cs" />

@@ -1,5 +1,6 @@
 ﻿using OriSceneExplorer.Inspector.PropertyEditors;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -39,6 +40,9 @@ namespace OriSceneExplorer.Inspector
 
             if (typeof(GameObject).IsAssignableFrom(descriptor.Info.Type))
                 return new GameObjectEditor();
+
+            if (typeof(IEnumerable).IsAssignableFrom(descriptor.Info.Type))
+                return new EnumerableEditor();
 
             return new DefaultEditor();
         }
