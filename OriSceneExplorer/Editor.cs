@@ -68,7 +68,11 @@ namespace OriSceneExplorer
 
             EditorSettings = Settings.LoadAll();
 
-            DebugMenuB.DebugControlsEnabled = EditorSettings.EnableDebugControls;
+            if (EditorSettings.EnableDebugControls)
+            {
+                DebugMenuB.MakeDebugMenuExist();
+                DebugMenuB.DebugControlsEnabled = true;
+            }
             autoPause = EditorSettings.AutoPause;
         }
 
