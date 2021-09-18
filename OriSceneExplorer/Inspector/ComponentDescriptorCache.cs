@@ -10,7 +10,7 @@ namespace OriSceneExplorer.Inspector
 
         static ComponentDescriptorCache()
         {
-            descriptors[typeof(Transform)] = new ComponentDescriptor(typeof(Transform), "position", "localPosition", "eulerAngles");
+            descriptors[typeof(Transform)] = new ComponentDescriptor(typeof(Transform), "position", "localPosition", "eulerAngles", "localScale");
         }
 
         public static ComponentDescriptor GetDescriptor(Type componentType)
