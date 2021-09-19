@@ -12,6 +12,8 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
         {
             if (type.Namespace == "System.Reflection")
                 CanExpand = false; // yeah just... nah not touching that
+            else if (type == typeof(AnimationCurve))
+                CanExpand = false;
         }
 
         public override bool Draw(ref object value)
