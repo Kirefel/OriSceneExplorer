@@ -11,7 +11,7 @@ namespace OriSceneExplorer.Inspector.PropertyEditors.Fields
 
         public Vector4Field(Vector4 value)
         {
-            stringValue = $"{value.w}, {value.x}, {value.y}, {value.z}";
+            stringValue = $"{value.x}, {value.y}, {value.z}, {value.w}";
             currentVector = value;
             lastValidVector = value;
         }
@@ -48,10 +48,10 @@ namespace OriSceneExplorer.Inspector.PropertyEditors.Fields
             if (components.Length != 4)
                 return false;
 
-            if (float.TryParse(components[0], out vector.w)
-                && float.TryParse(components[1], out vector.x)
-                && float.TryParse(components[2], out vector.y)
-                && float.TryParse(components[2], out vector.z))
+            if (float.TryParse(components[0], out vector.x)
+                && float.TryParse(components[1], out vector.y)
+                && float.TryParse(components[2], out vector.z)
+                && float.TryParse(components[3], out vector.w))
             {
                 return true;
             }

@@ -17,7 +17,7 @@ namespace OriSceneExplorer.Inspector.PropertyEditors
             }
 
             Vector4 newValue = field.Draw(GUILayout.MaxWidth(ComponentsView.MaxValueWidth));
-            var newRect = new Rect(newValue.w, newValue.x, newValue.y, newValue.z);
+            var newRect = new Rect(newValue.x, newValue.y, newValue.z, newValue.w);
             if (newRect != (Rect)value)
             {
                 value = newRect;
