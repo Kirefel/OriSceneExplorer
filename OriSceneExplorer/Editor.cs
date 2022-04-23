@@ -67,12 +67,6 @@ namespace OriSceneExplorer
             historyView.OnSelectionChange += obj => hierarchyView.SetSelection(obj, true);
 
             EditorSettings = Settings.LoadAll();
-
-            if (EditorSettings.EnableDebugControls)
-            {
-                DebugMenuB.MakeDebugMenuExist();
-                DebugMenuB.DebugControlsEnabled = true;
-            }
             autoPause = EditorSettings.AutoPause;
         }
 
