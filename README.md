@@ -1,13 +1,6 @@
 # Ori Scene Explorer
 
-## Installation
-
-* Put release contents in the `Ori DE` directory
-* Run game
-
-## Notes
-
-* Uses [Unity Doorstop](https://github.com/NeighTools/UnityDoorstop)
+Scene inspection tools.
 
 ## Keys
 
