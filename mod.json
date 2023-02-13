@@ -1,0 +1,6 @@
+{
+    "name": "Scene Explorer",
+    "version": "v1.0.0",
+    "preload": [],
+    "entrypoint": [ "OriSceneExplorer.dll" ]
+}
