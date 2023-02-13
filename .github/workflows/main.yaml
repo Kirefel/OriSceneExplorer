@@ -1,0 +1,28 @@
+name: Build and publish package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version and tag
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.6
+      - uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build and package
+        run: .\build.ps1
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./OriSceneExplorer.zip
+          generate_release_notes: true
+          draft: true
+          tag_name: ${{ github.event.inputs.version }}

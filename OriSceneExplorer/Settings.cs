@@ -9,7 +9,6 @@ namespace OriSceneExplorer.Configuration
     {
         private const string FileName = "ose_settings.json";
 
-        public bool EnableDebugControls = false;
         public bool AutoPause = true;
         public float PropertyNameColumnWidth = 240;
         public float PropertyTypeColumnWidth = 160;
