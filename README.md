@@ -2,6 +2,8 @@
 
 Scene inspection tools.
 
+Install using the [Mod Manager](https://github.com/Kirefel/bf-mod-manager)
+
 ## Keys
 
 * `F1`: Toggle display
