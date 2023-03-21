@@ -26,7 +26,7 @@ namespace OriSceneExplorer.Inspector
             }
             foreach (FieldInfo fieldInfo in componentType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                if (!exclusions.Contains(fieldInfo.Name))
+                if (!exclusions.Contains(fieldInfo.Name) && !fieldInfo.Name.EndsWith("k__BackingField"))
                     Properties.Add(new PropertyDescriptor(new ReflectionInfoWrapper(fieldInfo)));
             }
         }
