@@ -13,10 +13,13 @@ namespace OriSceneExplorer.Inspector
 
         private static readonly string[] exclusions = new string[] { "transform", "gameObject", "name", "tag", "hideFlags", "useGUILayout", "isActiveAndEnabled", "enabled" };
 
+        public List<MethodDescriptor> Methods { get; }
+
         public TypeDescriptor(Type componentType)
         {
             componentName = componentType.Name;
             Properties = new List<PropertyDescriptor>();
+            Methods = new List<MethodDescriptor>();
 
             foreach (PropertyInfo propertyInfo in componentType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
@@ -29,12 +32,20 @@ namespace OriSceneExplorer.Inspector
                 if (!exclusions.Contains(fieldInfo.Name) && !fieldInfo.Name.EndsWith("k__BackingField"))
                     Properties.Add(new PropertyDescriptor(new ReflectionInfoWrapper(fieldInfo)));
             }
+            foreach (MethodInfo methodInfo in componentType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Where(m => m.GetParameters().Length == 0))
+            {
+                if (methodInfo.Name.StartsWith("__BTN__"))
+                    Methods.Add(new MethodDescriptor { Name = methodInfo.Name.Substring(7), Method = methodInfo });
+                else if (methodInfo.GetCustomAttribute<UnityEngine.ContextMenu>(false, out var att))
+                    Methods.Add(new MethodDescriptor { Name = att.menuItem, Method = methodInfo });
+            }
         }
 
         public TypeDescriptor(Type componentType, params string[] propertyNames)
         {
             componentName = componentType.Name;
             Properties = new List<PropertyDescriptor>();
+            Methods = new List<MethodDescriptor>();
 
             foreach (string name in propertyNames)
             {
