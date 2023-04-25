@@ -24,12 +24,12 @@ namespace OriSceneExplorer.Inspector
             foreach (PropertyInfo propertyInfo in componentType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 ReflectionInfoWrapper wrapper = new ReflectionInfoWrapper(propertyInfo);
-                if (wrapper.CanRead && !exclusions.Contains(propertyInfo.Name) && !wrapper.IsIndex)
+                if (wrapper.CanRead && !ShouldExclude(componentType, propertyInfo.Name) && !wrapper.IsIndex)
                     Properties.Add(new PropertyDescriptor(wrapper));
             }
             foreach (FieldInfo fieldInfo in componentType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                if (!exclusions.Contains(fieldInfo.Name) && !fieldInfo.Name.EndsWith("k__BackingField"))
+                if (!ShouldExclude(componentType, fieldInfo.Name) && !fieldInfo.Name.EndsWith("k__BackingField"))
                     Properties.Add(new PropertyDescriptor(new ReflectionInfoWrapper(fieldInfo)));
             }
             foreach (MethodInfo methodInfo in componentType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Where(m => m.GetParameters().Length == 0))
@@ -40,6 +40,8 @@ namespace OriSceneExplorer.Inspector
                     Methods.Add(new MethodDescriptor { Name = att.menuItem, Method = methodInfo });
             }
         }
+
+        private static bool ShouldExclude(Type type, string name) => typeof(UnityEngine.Object).IsAssignableFrom(type) && exclusions.Contains(name);
 
         public TypeDescriptor(Type componentType, params string[] propertyNames)
         {
